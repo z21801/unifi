@@ -1,5 +1,4 @@
 import axios from "axios";
-import readline from "readline";
 import fs from "fs";
 
 let config = {
@@ -77,4 +76,4 @@ setInterval(() => {
       }
     }
   });
-}, 5000);
+}, 60000);
