@@ -24,7 +24,6 @@ setInterval(() => {
       let productHandle = products[i].handle.toLowerCase();
       let productVariants = products[i].variants;
       let productURL = `https://store.ui.com/collections/early-access/products/${productHandle}`;
-      let ATCLink = "https://store.ui.com/cart/39734811230297:1";
       // find all products in early access
       if (productHandle.includes("-ea")) {
         for (let i = 0; i < productVariants.length; i++) {
