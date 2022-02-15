@@ -15,8 +15,7 @@ setInterval(() => {
   });
   const lines = data.split("\n");
   let chosenKeywords = lines;
-  console.log(chosenKeywords);
-  console.log(process.env.WEBHOOK_URL)
+  console.log(chosenKeywords)
   
   axios.request(config).then((res) => {
     let inventory = [];
@@ -79,7 +78,7 @@ setInterval(() => {
       }
     }
   });
-}, 10000);
+}, 60000);
 
 
 let sendInStockWebhook = (itemName, itemURL) => {
