@@ -1,4 +1,3 @@
-g4 instant cover
-access point wifi 6 extender
-g4 doorbell pro poe adapter
-UniFi Patch Cable Outdoor
+Dream Router
+G4 doorbell pro
+Protect door lock
