@@ -3,7 +3,7 @@ import fs from "fs";
 import "dotenv/config";
 
 let config = {
-  url: "https://store.ui.com/products.json",
+  url: "https://store.ui.com/products.json?limit=250",
   validateStatus: false,
 };
 
@@ -17,17 +17,23 @@ setInterval(() => {
   let chosenKeywords = lines;
   console.log(chosenKeywords);
 
+  // take keywords and make them lowercased and remove whitespaces
+  const keywordsLowerCased = chosenKeywords.map((kw) =>
+    kw.toLowerCase().trim()
+  );
+
   axios.request(config).then((res) => {
     let inventory = [];
     const products = res.data.products;
     for (let i = 0; i < products.length; i++) {
-      let productTitle = products[i].title;
-      let productHandle = products[i].handle.toLowerCase();
-      let productVariants = products[i].variants;
-      let productURL = `https://store.ui.com/collections/early-access/products/${productHandle}`;
-      let productImg = products[i].images[0].src;
       // find all products in early access
-      if (productHandle.includes("-ea")) {
+      if (keywordsLowerCased.includes(products[i].title.toLowerCase())) {
+        let productTitle = products[i].title;
+        let productHandle = products[i].handle.toLowerCase();
+        let productVariants = products[i].variants;
+        let productURL = `https://store.ui.com/products/${productHandle}`;
+        let productImg = products[i].images[0].src;
+
         for (let i = 0; i < productVariants.length; i++) {
           // if multiple variants exist, list them.
           if (productVariants[i].title != "Default Title") {
@@ -52,40 +58,32 @@ setInterval(() => {
         }
       }
     }
-    // take keywords and make them lowercased and remove whitespaces
-    const keywordsLowerCased = chosenKeywords.map((kw) =>
-      kw.toLowerCase().trim()
-    );
     // iterate through populated inventory array
     for (let i = 0; i < inventory.length; i++) {
-      // if keyword matches
-      if (keywordsLowerCased.includes(inventory[i].title.toLowerCase())) {
-        switch (inventory[i].availability) {
-          case true: // if item is in stock...
-            if (inventory[i].variants !== "N/A") {
-              console.log(
-                `${inventory[i].title} ${inventory[i].variants} - ${inventory[i].availability} - ${inventory[i].url}`
-              );
-              sendInStockWebhook(
-                inventory[i].title,
-                inventory[i].url,
-                inventory[i].images[0].src,
-                inventory[i].image
-              );
-            } else {
-              console.log(
-                `${inventory[i].title} - ${inventory[i].availability} - ${inventory[i].url}`
-              );
-              sendInStockWebhook(
-                inventory[i].title,
-                inventory[i].url,
-                inventory[i].image
-              );
-            }
-            break;
-          default:
-            break;
-        }
+      switch (inventory[i].availability) {
+        case true: // if item is in stock...
+          if (inventory[i].variants !== "N/A") {
+            console.log(
+              `${inventory[i].title} ${inventory[i].variants} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
+            );
+            sendInStockWebhook(
+              inventory[i].title,
+              inventory[i].url,
+              inventory[i].image
+            );
+          } else {
+            console.log(
+              `${inventory[i].title} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
+            );
+            sendInStockWebhook(
+              inventory[i].title,
+              inventory[i].url,
+              inventory[i].image
+            );
+          }
+          break;
+        default:
+          break;
       }
     }
   });
@@ -118,7 +116,9 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
       ],
     })
     .then(function (response) {
-      console.log(response.status);
+      if (response.status === 200) {
+        console.log("Webhook Sent!");
+      }
     })
     .catch(function (error) {
       console.log(error);
