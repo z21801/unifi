@@ -1,6 +1,6 @@
 import axios from "axios";
 import fs from "fs";
-import 'dotenv/config'
+import "dotenv/config";
 
 let config = {
   url: "https://store.ui.com/products.json",
@@ -15,8 +15,8 @@ setInterval(() => {
   });
   const lines = data.split("\n");
   let chosenKeywords = lines;
-  console.log(chosenKeywords)
-  
+  console.log(chosenKeywords);
+
   axios.request(config).then((res) => {
     let inventory = [];
     const products = res.data.products;
@@ -25,6 +25,7 @@ setInterval(() => {
       let productHandle = products[i].handle.toLowerCase();
       let productVariants = products[i].variants;
       let productURL = `https://store.ui.com/collections/early-access/products/${productHandle}`;
+      let productImg = products[i].images[0].src;
       // find all products in early access
       if (productHandle.includes("-ea")) {
         for (let i = 0; i < productVariants.length; i++) {
@@ -45,6 +46,7 @@ setInterval(() => {
               variants: "N/A",
               availability: productVariants[i].available,
               url: productURL,
+              image: productImg,
             });
           }
         }
@@ -64,12 +66,21 @@ setInterval(() => {
               console.log(
                 `${inventory[i].title} ${inventory[i].variants} - ${inventory[i].availability} - ${inventory[i].url}`
               );
-              sendInStockWebhook(inventory[i].title, inventory[i].url)
+              sendInStockWebhook(
+                inventory[i].title,
+                inventory[i].url,
+                inventory[i].images[0].src,
+                inventory[i].image
+              );
             } else {
               console.log(
                 `${inventory[i].title} - ${inventory[i].availability} - ${inventory[i].url}`
               );
-              sendInStockWebhook(inventory[i].title, inventory[i].url)
+              sendInStockWebhook(
+                inventory[i].title,
+                inventory[i].url,
+                inventory[i].image
+              );
             }
             break;
           default:
@@ -78,34 +89,38 @@ setInterval(() => {
       }
     }
   });
-}, 60000);
+}, 5000);
 
-
-let sendInStockWebhook = (itemName, itemURL) => {
-  axios.post(process.env.WEBHOOK_URL, {
-    "@type": "MessageCard",
-    "@context": "http://schema.org/extensions",
-    "themeColor": "0076D7",
-    "summary": `${itemName} is in stock!`,
-    "sections": [{
-        "activityTitle": `${itemName} is in stock!`,
-        "activitySubtitle": "found by Gene's Unifi EA monitor",
-        "activityImage": "https://teamsnodesample.azurewebsites.net/static/img/image5.png",
-        "facts": [{
-            "name": "Product",
-            "value": itemName
-        }, {
-            "name": "URL",
-            "value": itemURL
-        }],
-        "markdown": true
-    }]
-})
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-}
+let sendInStockWebhook = (itemName, itemURL, itemImg) => {
+  axios
+    .post(process.env.WEBHOOK_URL, {
+      "@type": "MessageCard",
+      "@context": "http://schema.org/extensions",
+      themeColor: "0076D7",
+      summary: `${itemName} is in stock!`,
+      sections: [
+        {
+          activityTitle: `${itemName} is in stock!`,
+          activitySubtitle: "found by Gene's Unifi EA monitor",
+          activityImage: itemImg,
+          facts: [
+            {
+              name: "Product",
+              value: itemName,
+            },
+            {
+              name: "URL",
+              value: itemURL,
+            },
+          ],
+          markdown: true,
+        },
+      ],
+    })
+    .then(function (response) {
+      console.log(response.status);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
