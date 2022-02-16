@@ -1,13 +1,14 @@
 import axios from "axios";
 import fs from "fs";
 import "dotenv/config";
+import { start } from "repl";
 
 let config = {
   url: "https://store.ui.com/products.json?limit=250",
   validateStatus: false,
 };
 
-setInterval(() => {
+let startProductMonitor = () => {
   let data = fs.readFileSync("./monitor.txt", "utf-8", function (err, data) {
     if (err) {
       throw err;
@@ -87,7 +88,7 @@ setInterval(() => {
       }
     }
   });
-}, 5000);
+};
 
 let sendInStockWebhook = (itemName, itemURL, itemImg) => {
   axios
@@ -124,3 +125,5 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
       console.log(error);
     });
 };
+
+export { startProductMonitor };
