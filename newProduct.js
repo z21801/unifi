@@ -50,7 +50,7 @@ let startNewProductMonitor = () => {
           }
         }
         console.log(`productAfter: ${productAfter}`);
-        if (productBefore !== productAfter) {
+        if (productBefore != productAfter) {
           for (let i = 0; i < inventory.length; i++) {
             if (inventory[i].variants !== "N/A") {
               console.log(
@@ -88,7 +88,7 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
       sections: [
         {
           activityTitle: `${itemName} is in stock!`,
-          activitySubtitle: "found by Gene's Unifi EA monitor",
+          activitySubtitle: "found by Gene's Unifi monitor",
           activityImage: itemImg,
           facts: [
             {

@@ -100,7 +100,7 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
       sections: [
         {
           activityTitle: `${itemName} is in stock!`,
-          activitySubtitle: "found by Gene's Unifi EA monitor",
+          activitySubtitle: "found by Gene's Unifi monitor",
           activityImage: itemImg,
           facts: [
             {

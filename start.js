@@ -7,10 +7,10 @@ const prompt = ps({ sigint: true });
 // setInterval(startNewProductMonitor, 60000);
 
 // setInterval(startProductMonitor, 60000);
-let chooseModule = prompt("Which module would you like to use? ");
 console.log("1. Monitor products from monitor.txt");
 console.log("2. Monitor for new products");
 console.log("3. Run both modules");
+let chooseModule = prompt("Which module would you like to use? ");
 
 switch (chooseModule) {
   case "1":
