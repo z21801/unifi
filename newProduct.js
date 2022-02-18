@@ -1,5 +1,6 @@
 import axios from "axios";
 import "dotenv/config";
+import { timestamp } from "./timestamp.js";
 
 let config = {
   url: "https://store.ui.com/products.json?limit=1",
@@ -16,7 +17,7 @@ let startNewProductMonitor = () => {
     for (let i = 0; i < products.length; i++) {
       productBefore = products[i].title;
     }
-    console.log(`productBefore: ${productBefore}`);
+    console.log(`${timestamp()} productBefore: ${productBefore}`);
     setTimeout(() => {
       axios.request(config).then((res) => {
         for (let i = 0; i < products.length; i++) {
@@ -49,7 +50,7 @@ let startNewProductMonitor = () => {
             }
           }
         }
-        console.log(`productAfter: ${productAfter}`);
+        console.log(`${timestamp()} productAfter: ${productAfter}`);
         if (productBefore != productAfter) {
           for (let i = 0; i < inventory.length; i++) {
             if (inventory[i].variants !== "N/A") {

@@ -1,8 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import "dotenv/config";
-import { start } from "repl";
-
+import { timestamp } from "./timestamp.js";
 let config = {
   url: "https://store.ui.com/products.json?limit=250",
   validateStatus: false,
