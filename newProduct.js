@@ -7,11 +7,10 @@ let config = {
   validateStatus: false,
 };
 
+let productBefore = "";
+let productAfter = "";
 let startNewProductMonitor = () => {
   axios.request(config).then((res) => {
-    let productBefore = "";
-    let productAfter = "";
-
     let inventory = [];
     const products = res.data.products;
     for (let i = 0; i < products.length; i++) {
@@ -114,5 +113,7 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
       console.log(error);
     });
 };
+
+startNewProductMonitor()
 
 export { startNewProductMonitor };
