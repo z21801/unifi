@@ -48,28 +48,28 @@ let startNewProductMonitor = () => {
               });
             }
           }
-        }
-        console.log(`${timestamp()} productAfter: ${productAfter}`);
-        if (productBefore != productAfter) {
-          for (let i = 0; i < inventory.length; i++) {
-            if (inventory[i].variants !== "N/A") {
-              console.log(
-                `${inventory[i].title} ${inventory[i].variants} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
-              );
-              sendInStockWebhook(
-                inventory[i].title,
-                inventory[i].url,
-                inventory[i].image
-              );
-            } else {
-              console.log(
-                `${inventory[i].title} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
-              );
-              sendInStockWebhook(
-                inventory[i].title,
-                inventory[i].url,
-                inventory[i].image
-              );
+          console.log(`${timestamp()} productAfter: ${productAfter}`);
+          if (productBefore != productAfter) {
+            for (let i = 0; i < inventory.length; i++) {
+              if (inventory[i].variants !== "N/A") {
+                console.log(
+                  `${inventory[i].title} ${inventory[i].variants} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
+                );
+                sendInStockWebhook(
+                  inventory[i].title,
+                  inventory[i].url,
+                  inventory[i].image
+                );
+              } else {
+                console.log(
+                  `${inventory[i].title} - ${inventory[i].availability} - ${inventory[i].url} - ${inventory[i].image}`
+                );
+                sendInStockWebhook(
+                  inventory[i].title,
+                  inventory[i].url,
+                  inventory[i].image
+                );
+              }
             }
           }
         }
@@ -114,6 +114,6 @@ let sendInStockWebhook = (itemName, itemURL, itemImg) => {
     });
 };
 
-startNewProductMonitor()
+startNewProductMonitor();
 
 export { startNewProductMonitor };
